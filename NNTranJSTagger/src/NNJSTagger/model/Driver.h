@@ -32,7 +32,7 @@ class Driver {
     Graph _cg;  // build neural graphs
     vector<Graph> _decode_cgs;
     //vector<BeamGraphBuilder> _beam_builders;
-    GreedyGraphBuilder _greedy_builder;
+    std::vector<GreedyGraphBuilder> _greedy_builders;
     ModelParams _modelparams;  // model parameters
     HyperParams _hyperparams;
 
@@ -58,6 +58,7 @@ class Driver {
         _hyperparams.print();
 
         //_beam_builders.resize(_hyperparams.batch);
+        _greedy_builders.resize(_hyperparams.batch);
         _decode_cgs.resize(_hyperparams.batch);
 
         dtype dropout_value = _hyperparams.dropProb;
@@ -67,7 +68,9 @@ class Driver {
 //        }
 
         _hyperparams.dropProb = dropout_value;
-        _greedy_builder.initial(_modelparams, _hyperparams);
+        for (auto & builder : _greedy_builders) {
+            builder.initial(_modelparams, _hyperparams);
+        }
 
         setUpdateParameters(_hyperparams.nnRegular, _hyperparams.adaAlpha, _hyperparams.adaEps);
         _batch = 0;
@@ -106,16 +109,16 @@ class Driver {
         } else {
             _cg.clearValue(true);
             for (int idx = 0; idx < num; idx++) {
-                _greedy_builder.encode(&_cg, &sentences[idx]);
+                _greedy_builders.at(idx).encode(&_cg, &sentences[idx]);
             }
             _cg.compute();
             #pragma omp parallel for schedule(static,1)
             for (int idx = 0; idx < num; idx++) {
                 _decode_cgs[idx].clearValue(true);
-                _greedy_builder.decode(&(_decode_cgs[idx]), &sentences[idx], &goldACs[idx]);
+                _greedy_builders.at(idx).decode(&(_decode_cgs[idx]), &sentences[idx], &goldACs[idx]);
                 _eval.overall_label_count += goldACs[idx].size();
 
-                cost += loss_google(_greedy_builder, num);
+                cost += loss_google(_greedy_builders.at(idx), num);
             }
             for (int i = 0; i < num; ++i) {
                 _decode_cgs[i].backward();
@@ -150,7 +153,7 @@ class Driver {
         } else {
             _cg.clearValue();
             for (int idx = 0; idx < num; idx++) {
-                _greedy_builder.encode(&_cg, &sentences[idx]);
+                _greedy_builders.at(idx).encode(&_cg, &sentences[idx]);
             }
             _cg.compute();
 
@@ -159,9 +162,9 @@ class Driver {
             #pragma omp parallel for schedule(static,1)
             for (int idx = 0; idx < num; idx++) {
                 _decode_cgs[idx].clearValue();
-                _greedy_builder.decode(&(_decode_cgs[idx]), &sentences[idx]);
-                int step = _greedy_builder.outputs.size();
-                _greedy_builder.states[step - 1].getResults(seg_results[idx], tag_results[idx], &_hyperparams);
+                _greedy_builders.at(idx).decode(&(_decode_cgs[idx]), &sentences[idx]);
+                int step = _greedy_builders.at(idx).outputs.size();
+                _greedy_builders.at(idx).states[step - 1].getResults(seg_results[idx], tag_results[idx], &_hyperparams);
             }
         }
     }
