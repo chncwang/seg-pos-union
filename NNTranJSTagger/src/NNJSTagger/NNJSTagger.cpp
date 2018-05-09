@@ -10,7 +10,7 @@
 #include <omp.h>
 #include "Argument_helper.h"
 #if USE_GPU
-#include "n3ldg_cuda.h"
+#include "N3LDG_cuda.h"
 #endif
 
 JSTagger::JSTagger(){
