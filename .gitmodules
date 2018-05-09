@@ -1,0 +1,3 @@
+[submodule "NNTranJSTagger/N3LDG"]
+	path = NNTranJSTagger/N3LDG
+	url = https://github.com/chncwang/N3LDG-1

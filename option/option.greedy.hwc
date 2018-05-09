@@ -1,0 +1,17 @@
+
+outBest = .out
+maxInstance = 100
+verboseIter = 400
+dropProb = 0.25
+adaAlpha = 0.001
+delta = 0
+beam = 1
+charEmbFile = /home/lzl/worksapce/cpp_worksapce/Task_JointPS_For_Embedding/zhwiki_0408/skipgram_100d/zhwiki_skipgram.100d.target 
+bicharEmbFile = /home/lzl/worksapce/cpp_worksapce/Task_JointPS_For_Embedding/emb/bichar.vec
+startBeam = 10000
+batchSize = 16
+tagEmbSize = 100
+charHiddenSize = 200
+wordHiddenSize = 200
+charRNNHiddenSize = 200
+wordRNNHiddenSize = 200

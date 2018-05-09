@@ -1,0 +1,1 @@
+cmake .. -USE_CUDA=TRUE -DMKL=TRUE
