@@ -1,6 +1,6 @@
 
 outBest = .out
-maxInstance = 100
+maxInstance = -1
 verboseIter = 400
 dropProb = 0.25
 adaAlpha = 0.001
