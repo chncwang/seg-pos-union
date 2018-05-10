@@ -255,6 +255,7 @@ class Driver {
 
             for (int idx = 0; idx < curcount; idx++) {
                 pCurNode = builder.outputs[step][idx].in;
+                std::cout << "pCurNode->loss:" << pCurNode->loss[0] << std::endl;
                 pCurNode->loss[0] += scores[idx] / (sum * num);
             }
 
