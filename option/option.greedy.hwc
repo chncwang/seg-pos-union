@@ -1,6 +1,6 @@
 
 outBest = .out
-maxInstance = -1
+maxInstance = 10
 verboseIter = 400
 dropProb = 0.25
 adaAlpha = 0.001
@@ -9,7 +9,7 @@ beam = 1
 charEmbFile = /root/zhwiki_skipgram.100d.target
 bicharEmbFile = /root/bichar.vec
 startBeam = 10000
-batchSize = 16
+batchSize = 1
 tagEmbSize = 100
 charHiddenSize = 200
 wordHiddenSize = 200
