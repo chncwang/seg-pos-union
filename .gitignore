@@ -11,3 +11,4 @@ NNTranJSTagger/build/
 NNTranJSTagger/bin/
 *.swp
 tags
+*.out
