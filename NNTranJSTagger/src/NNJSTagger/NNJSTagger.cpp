@@ -548,6 +548,8 @@ int main(int argc, char* argv[]) {
     ah.new_named_string("option", "optionFile", "named_string", "option file to train a model, optional when training", optionFile);
     ah.new_named_string("output", "outputFile", "named_string", "output file to test, must when testing", outputFile);
     ah.new_named_int("th", "thread", "named_int", "number of threads for openmp", threads);
+    int device_id;
+    ah.new_named_int("d", "device", "named_int", "number of threads for openmp", device_id);
 
     ah.process(argc, argv);
 
@@ -561,7 +563,7 @@ int main(int argc, char* argv[]) {
 
     JSTagger tagger;
 #if USE_GPU
-    n3ldg_cuda::InitCuda();
+    n3ldg_cuda::InitCuda(device_id);
 #endif
     if (bTrain) {
 		tagger.train(trainFile, devFile, testFile, modelFile, optionFile);
