@@ -169,25 +169,25 @@ class Driver {
         }
     }
 
-    void updateModel() {
-        //if (_batch <= 0) return;
-        if (true) {
-            if (_ada._params.empty()) {
-                _modelparams.exportModelParams(_ada);
-            }
-            //_ada.rescaleGrad(1.0 / _batch);
-            //_ada.update(10);
-            _ada.updateAdam(_clip);
-            _batch = 0;
-        } else {
-//            if (_beam_ada._params.empty()) {
-//                _modelparams.exportModelBeamParams(_beam_ada);
-//            }
-//            _beam_ada.rescaleGrad(1.0 / _batch);
-//            _beam_ada.update(10);
-//            _beam_ada.updateAdam(_clip);
-//            _batch = 0;
+    void syncParams() {
+#if TEST_CUDA
+        for (BaseParam *param : _ada._params) {
+            param->val.copyFromHostToDevice();
         }
+#endif
+    }
+
+    void updateModel() {
+        if (_ada._params.empty()) {
+            _modelparams.exportModelParams(_ada);
+        }
+        //_ada.rescaleGrad(1.0 / _batch);
+        //_ada.update(10);
+        std::cout << "before updateAdam" << std::endl;
+        _ada.updateAdam(_clip);
+        std::cout << "after updateAdam" << std::endl;
+        _batch = 0;
+        syncParams();
     }
 
     void writeModel();
