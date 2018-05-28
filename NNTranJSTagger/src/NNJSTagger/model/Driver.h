@@ -183,9 +183,7 @@ class Driver {
         }
         //_ada.rescaleGrad(1.0 / _batch);
         //_ada.update(10);
-        std::cout << "before updateAdam" << std::endl;
         _ada.updateAdam(_clip);
-        std::cout << "after updateAdam" << std::endl;
         _batch = 0;
         syncParams();
     }
